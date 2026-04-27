@@ -1,0 +1,6 @@
+[core]
+    remote = s3_storage
+['remote "s3_storage"']
+    url = s3://s3-student-mle-20260317-efc01cb482-freetrack
+    endpointurl = https://storage.yandexcloud.net
+    version_aware = true

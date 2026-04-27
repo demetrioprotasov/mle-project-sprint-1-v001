@@ -1,0 +1,102 @@
+schema: '2.0'
+stages:
+  get_data:
+    cmd: python3 scripts/data.py
+    deps:
+    - path: scripts/data.py
+      hash: md5
+      md5: 4d04a8b25f8854cc24dcbfdab59b967a
+      size: 1476
+    params:
+      params.yaml:
+        index_col: flat_id
+        retrain: false
+    outs:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: d2dcc8f6bf02a9002cbc732f59b86ccc
+      size: 14622615
+      cloud:
+        s3_storage:
+          etag: d2dcc8f6bf02a9002cbc732f59b86ccc
+          version_id: 0006507604B4F631
+  fit_model:
+    cmd: python3 scripts/fit.py
+    deps:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: d2dcc8f6bf02a9002cbc732f59b86ccc
+      size: 14622615
+    - path: scripts/fit.py
+      hash: md5
+      md5: 7bee1484c3075d2e79cce9c753234ba1
+      size: 1940
+    params:
+      params.yaml:
+        binary_one_hot_drop: if_binary
+        cat_bin_features:
+        - has_elevator
+        - is_apartment
+        - studio
+        cat_features:
+        - building_type_int
+        cat_one_hot_drop: first
+        num_features:
+        - build_year
+        - latitude
+        - longitude
+        - ceiling_height
+        - flats_count
+        - floors_total
+        - floor
+        - kitchen_area
+        - living_area
+        - rooms
+        - total_area
+        random_state: 101
+        retrain: false
+        target_col: price
+    outs:
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: 83cf8ba9024c5f8c05afb06c34346d39
+      size: 1116807
+      cloud:
+        s3_storage:
+          etag: 83cf8ba9024c5f8c05afb06c34346d39
+          version_id: 0006507604AF3DE1
+  evaluate_model:
+    cmd: python3 scripts/evaluate.py
+    deps:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: d2dcc8f6bf02a9002cbc732f59b86ccc
+      size: 14622615
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: 83cf8ba9024c5f8c05afb06c34346d39
+      size: 1116807
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: 2a29cdfd250d83e394512680dbd15343
+      size: 1418
+    params:
+      params.yaml:
+        metrics:
+        - r2
+        - neg_mean_absolute_error
+        - neg_root_mean_squared_error
+        n_jobs: -1
+        n_splits: 5
+        random_state: 101
+        retrain: false
+        target_col: price
+    outs:
+    - path: cv_results/cv_res.json
+      hash: md5
+      md5: 4a41aa925b18a908598fe79aa220580b
+      size: 155
+      cloud:
+        s3_storage:
+          etag: 4a41aa925b18a908598fe79aa220580b
+          version_id: 0006507604ADCC6D
