@@ -19,7 +19,10 @@ s3-student-mle-20260317-efc01cb482-freetrack
 
 ### Этап 2. Очистка данных
 
-В работе.
+- DAG: `part1_airflow/dags/clean_real_estate_dataset.py`
+- Функция DAG: `clean_dataset`
+- Ноутбук с EDA и функциями очистки: `part1_airflow/notebooks/eda_and_cleaning.ipynb`
+- Результирующая таблица в `destination_db`: `real_estate_clean`
 
 ### Этап 3. DVC-пайплайн обучения модели
 
